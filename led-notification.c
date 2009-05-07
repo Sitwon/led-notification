@@ -179,6 +179,7 @@ static void init_plugin(PurplePlugin *plugin) {
 	purple_prefs_add_string("/plugins/gtk/gtk-simom-lednot/chat", "nick");
 	purple_prefs_add_string("/plugins/gtk/gtk-simom-lednot/filename",
 	                        "/proc/acpi/asus/mled");
+	purple_prefs_add_string("/plugins/gtk/gtk-simom-lednot/format", "num");
 }
 
 static gboolean plugin_load(PurplePlugin *plugin) {
