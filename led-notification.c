@@ -44,7 +44,12 @@
 void led_set(gboolean state) {
 	const char *filename=purple_prefs_get_string(
 	                                 "/plugins/gtk/gtk-simom-lednot/filename");
+	const char *format=purple_prefs_get_string("/plugins/gtk/gtk-simom-lednot/format");
 	FILE *file=NULL;
+	gboolean thinklight = FALSE;
+
+	if (strcmp(format, "word"))
+		thinklight = TRUE;
 
 	file=fopen(filename, "w");
 	if(file==NULL) {
@@ -54,9 +59,9 @@ void led_set(gboolean state) {
 	}
 
 	if(state) {
-		fputs("1", file);
+		thinklight ? fputs("1", file) : fputs("on", file);
 	} else {
-		fputs("0", file);
+		thinklight ? fputs("0", file) : fputs("off", file);
 	}
 
 	fclose(file);
@@ -155,6 +160,14 @@ static GtkWidget *plugin_config_frame(PurplePlugin *plugin) {
 
 	ent=pidgin_prefs_labeled_entry(vbox2,"File to control led:",
 	                              "/plugins/gtk/gtk-simom-lednot/filename",sg);
+
+	dd = pidgin_prefs_dropdown(vbox2,"LED file format:",
+								PURPLE_PREF_STRING,
+								"/plugins/gtk/gtk-simom-lednot/format",
+								"1 = on, 0 = off", "num",
+								"'on' = on, 'off' = off", "word",
+								NULL);
+	gtk_size_group_add_widget(sg, dd);
 
 	gtk_widget_show_all(frame);
 	return frame;
