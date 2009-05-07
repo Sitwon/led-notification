@@ -1,0 +1,9 @@
+HOW TO INSTALL
+--------------
+
+1) Edit Makefile (if necessary)
+2) make
+3) make install
+
+This will install plugin to ${HOME}/.purple/plugins.
+

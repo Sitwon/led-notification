@@ -1,0 +1,15 @@
+Led-notification, a Pidgin plugin
+----------------
+
+Led-notification can control leds found on some laptops, or anything else that is controlled by writing '1' or '0' to a file.
+
+Simo Mattila <simo.h.mattila@gmail.com>
+http://koti.mbnet.fi/simom/
+
+
+Changelog:
+
+Version 0.1
+
+    * Initial version 
+
