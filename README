@@ -1,3 +1,8 @@
+I am not the original author. I found this plugin and forked it because I wanted it to control the ThinkLight on my ThinkPads, which requires you to write "on" or "off", not "1" or "0", to /proc/acpi/ibm/light. I sent a patch to the original author but never received a response.
+
+Below is the original README text.
+==========
+
 Led-notification, a Pidgin plugin
 ----------------
 
