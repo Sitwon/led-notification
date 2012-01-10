@@ -69,6 +69,7 @@ void led_set(gboolean state) {
       snprintf(xfile, 15*sizeof(char), "xset led %s", filename);
       file = popen(xfile, "w");
       pclose(file);
+      break;
     default:
       purple_debug_error("Led-notification","Erroneous option '%s'\n",format);
       break;
@@ -82,6 +83,7 @@ void led_set(gboolean state) {
       snprintf(xfile, 15*sizeof(char), "xset -led %s", filename);
       file = popen(xfile, "w");
       pclose(file);
+      break;
     default:
       purple_debug_error("Led-notification","Erroneous option '%s'\n",format);
       break;
