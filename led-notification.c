@@ -23,7 +23,7 @@
 
 #define PURPLE_PLUGINS
 
-#define VERSION "0.1"
+#define VERSION "0.2"
 
 #include <glib.h>
 #include <string.h>
@@ -44,12 +44,20 @@
 void led_set(gboolean state) {
   const char *filename=purple_prefs_get_string("/plugins/gtk/gtk-simom-lednot/filename");
   const char *format=purple_prefs_get_string("/plugins/gtk/gtk-simom-lednot/format");
+  char *xfile=malloc(15*sizeof(char));
   FILE *file=NULL;
 
-  file=fopen(filename, "w");
-  if(file==NULL) {
-    purple_debug_error("Led-notification","Error opening file '%s'\n",filename);
-    return;
+  if(format[0] == 'x'){
+    if (xfile==NULL) {
+      purple_debug_error("Led-notification","Unable to allocate memory for xset command line");
+      return;
+    }
+  } else {
+    file=fopen(filename, "w");
+    if(file==NULL) {
+      purple_debug_error("Led-notification","Error opening file '%s'\n",filename);
+      return;
+    }
   }
 
   if (state) {
@@ -57,6 +65,11 @@ void led_set(gboolean state) {
     case 'n': fputs("1",file); break;
     case 'w': fputs("on",file); break;
     case 'p': fputs("0 blink",file); break;
+    case 'x':
+      snprintf(xfile, 15*sizeof(char), "xset led %s", filename);
+      file = popen(xfile, "w");
+      pclose(file);
+      break;
     default:
       purple_debug_error("Led-notification","Erroneous option '%s'\n",format);
       break;
@@ -66,13 +79,22 @@ void led_set(gboolean state) {
     case 'n': fputs("0",file); break;
     case 'w': fputs("off",file); break;
     case 'p': fputs("0 on",file); break;
+    case 'x':
+      snprintf(xfile, 15*sizeof(char), "xset -led %s", filename);
+      file = popen(xfile, "w");
+      pclose(file);
+      break;
     default:
       purple_debug_error("Led-notification","Erroneous option '%s'\n",format);
       break;
     }
   }
 
-  fclose(file);
+  if(format[0]=='x'){
+    free(xfile);
+  } else {
+    fclose(file);
+  }
 }
 
 GList *get_pending_list(guint max) {
@@ -172,6 +194,7 @@ static GtkWidget *plugin_config_frame(PurplePlugin *plugin) {
 			     "1 = on, 0 = off", "num",
 			     "'on' = on, 'off' = off", "word",
 			     "'0 blink' = on, '0 on' = off", "pair",
+			     "XSet (Specify LED number in filename)", "xset",
 			     NULL);
   gtk_size_group_add_widget(sg, dd);
 
@@ -223,9 +246,9 @@ static PurplePluginInfo info = {
   VERSION,
 
   "Led notification on laptops",
-  "Informs for new messages with your laptops led",
-  "Simo Mattila <simo.h.mattila@gmail.com>",
-  "http://koti.mbnet.fi/simom/",
+  "Informs for new messages with your laptop or keyboard led. Based on version by Simo Mattila",
+  "Thomas Lake <tswsl1989@sucs.org>",
+  "http://github.com/tswsl1989/led-notification",
 
   plugin_load,   /* load */
   plugin_unload, /* unload */
